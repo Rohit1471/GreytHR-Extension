@@ -114,7 +114,7 @@
     let shiftTimeInMS = shiftTotalTime.hr*60*60*1000 + shiftTotalTime.min*60*1000;
     let timeRemaningInMS = shiftTimeInMS - timeCompletedInMS;
     let overtime=false;
-    if(timeRemaningInMS<0) {-timeRemaningInMS; overtime = true;};
+    if(timeRemaningInMS<0) {timeRemaningInMS = -timeRemaningInMS; overtime = true;};
 
     let remaningTime = new Date(timeRemaningInMS).toISOString().split('T')[1].split(':00')[0]; 
     return {remaningTime:remaningTime, overtime:overtime}; 
@@ -128,7 +128,7 @@
     let p2 = `<p><b>Today's Working Hours:</b> ${GLOBAL_TIME_MANAGER.workTime.totalHr}hr ${GLOBAL_TIME_MANAGER.workTime.totalMin}min</p>` ;
     let p3 = `<p><b>Today's Break Hours:</b> ${GLOBAL_TIME_MANAGER.breakTime.totalHr}hr ${GLOBAL_TIME_MANAGER.breakTime.totalMin}min</p>`;
     let p4 = `<p><b>Shift End Time:</b> ${GLOBAL_TIME_MANAGER.shiftEndTime.shiftEndFixTime}</p>`;
-    let p5 = `<p><b>Remaning Time:</b> ${GLOBAL_TIME_MANAGER.remaningTime.remaningTime} </p>`;
+    let p5 = `<p><b>${GLOBAL_TIME_MANAGER.remaningTime.overtime ? "Extra Time" : "Remaning Time"} :</b> ${GLOBAL_TIME_MANAGER.remaningTime.remaningTime} </p>`;
     let p6 = `<p><b>Overtime:</b> ${GLOBAL_TIME_MANAGER.remaningTime.overtime ? "Time's up :-)" : "No" }</p>`;
 
     let pArr = [p1, p2, p3, p4, p5, p6];
