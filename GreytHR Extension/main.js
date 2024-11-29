@@ -17,10 +17,19 @@
 
   document.addEventListener("DOMContentLoaded", allDomLoaded);
 
+  function getFormattedDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   function allDomLoaded(){
     chrome.storage.local.get(["apiData"]).then((result) => {
-      GLOBAL_TIME_MANAGER.swipesUrl = result.apiData;
-      console.log(GLOBAL_TIME_MANAGER.swipesUrl);
+      let todayApiEndpoint = result.apiData;
+      GLOBAL_TIME_MANAGER.swipesUrl = todayApiEndpoint.replace(/startDate=\d{4}-\d{2}-\d{2}/, `startDate=${getFormattedDate()}`);
+      console.log("GLOBAL_TIME_MANAGER.swipesUrl: ", GLOBAL_TIME_MANAGER.swipesUrl);
       fetchData(GLOBAL_TIME_MANAGER.swipesUrl);
     });
   }
@@ -138,6 +147,4 @@
       outputContainer.append(div);
     })
   }
-
-
 
