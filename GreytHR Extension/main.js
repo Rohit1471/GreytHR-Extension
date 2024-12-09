@@ -11,6 +11,7 @@
     workTime : "",
     breakTime : "",
     shiftTotalTime : {hr:8, min:30},
+    shiftStartTime: "",
     shiftEndTime: "",
     remaningTime: "", //Can be used as extraa time with negative value
   }
@@ -45,11 +46,12 @@
     .then(data => {
       GLOBAL_TIME_MANAGER.data = data;
       GLOBAL_TIME_MANAGER.allSwipes = swipeProvider(data);
+      GLOBAL_TIME_MANAGER.shiftStartTime = calculateShiftStartTime(GLOBAL_TIME_MANAGER.allSwipes);
       GLOBAL_TIME_MANAGER.workTime = calculateTime(GLOBAL_TIME_MANAGER.allSwipes, "work");
       GLOBAL_TIME_MANAGER.breakTime = calculateTime(GLOBAL_TIME_MANAGER.allSwipes, "break");
       GLOBAL_TIME_MANAGER.shiftEndTime = calculateShiftEndTime(GLOBAL_TIME_MANAGER.shiftTotalTime, GLOBAL_TIME_MANAGER.workTime);
       GLOBAL_TIME_MANAGER.remaningTime = calculateRemaningTime(GLOBAL_TIME_MANAGER.shiftTotalTime, GLOBAL_TIME_MANAGER.workTime);
-      // console.log("Working Hour: ", GLOBAL_TIME_MANAGER.workTime);
+      
 
       showOutput();
 
@@ -59,6 +61,11 @@
       console.error('There was a problem with the fetch operation:', error); 
     });
 
+  }
+
+  function calculateShiftStartTime(dataArr){
+    let shiftStartTime = new Date(dataArr[0]);    
+    return shiftStartTime.toString().split(' ')[4];
   }
 
   function swipeProvider(data){
@@ -139,12 +146,12 @@
     let p4 = `<p><b>Shift End Time:</b> ${GLOBAL_TIME_MANAGER.shiftEndTime.shiftEndFixTime}</p>`;
     let p5 = `<p><b>${GLOBAL_TIME_MANAGER.remaningTime.overtime ? "Extra Time" : "Remaning Time"} :</b> ${GLOBAL_TIME_MANAGER.remaningTime.remaningTime} </p>`;
     let p6 = `<p><b>Overtime:</b> ${GLOBAL_TIME_MANAGER.remaningTime.overtime ? "Time's up :-)" : "No" }</p>`;
+    let p7 = `<p><b>Shift Start Time:</b> ${GLOBAL_TIME_MANAGER.shiftStartTime}</p>`;
 
-    let pArr = [p1, p2, p3, p4, p5, p6];
+    let pArr = [p1, p2, p3, p7, p4, p5, p6];
     pArr.forEach(el => {
       let div = document.createElement('div');
       div.innerHTML = el;
       outputContainer.append(div);
     })
   }
-
